@@ -1,0 +1,39 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <ion-title>{{selectedItem.name}}</ion-title>
+        <ion-buttons right>
+            <button ion-button icon-only (click)='usePhone();'>
+                <ion-icon name="call"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-buttons right>
+            <button ion-button icon-only (click)='sendEmail();'>
+                <ion-icon name="mail"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-buttons right>
+            <button ion-button icon-only (click)='save();'>
+                <ion-icon name="sync"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-item>
+        <ion-label floating>Name</ion-label>
+        <ion-input type="text" [(ngModel)]="name"></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label floating>Email
+        </ion-label>
+        <ion-input type="email" [(ngModel)]="email"></ion-input>      
+    </ion-item>
+    <ion-item>
+        <ion-label floating>Phone</ion-label>
+        <ion-input type="tel"  [(ngModel)]="phone"></ion-input>
+    </ion-item>
+
+
+</ion-content>
