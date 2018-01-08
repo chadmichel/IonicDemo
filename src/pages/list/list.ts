@@ -10,7 +10,9 @@ import { ContactDetail } from '../../DTO/contactdetail';
 })
 export class ListPage {
  
+  allItems: Array<ContactDetail>;
   items: Array<ContactDetail>;
+  filter: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public contactService: ContactService) {
     
@@ -18,9 +20,12 @@ export class ListPage {
       contacts => {
 
         this.items = [];
+        this.allItems = [];
+
         for(var i = 0; i < contacts.length; i++) {
           var item = contacts[i];
           this.items.push(item);
+          this.allItems.push(item);
         }
 
       });
@@ -31,5 +36,14 @@ export class ListPage {
     this.navCtrl.push(DetailPage, {
       item: item
     });
+  }
+
+  onFilter(e, x) {
+    this.items = [];
+    for(var i = 0; i < this.allItems.length; i++) {
+      var item : ContactDetail = this.allItems[i];
+      if (item.name != null && item.name.toLowerCase().includes(this.filter.toLowerCase()))
+        this.items.push(item); 
+    }
   }
 }

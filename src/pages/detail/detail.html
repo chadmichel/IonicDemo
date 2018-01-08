@@ -2,16 +2,6 @@
     <ion-navbar color="primary">
         <ion-title>{{selectedItem.name}}</ion-title>
         <ion-buttons right>
-            <button ion-button icon-only (click)='usePhone();'>
-                <ion-icon name="call"></ion-icon>
-            </button>
-        </ion-buttons>
-        <ion-buttons right>
-            <button ion-button icon-only (click)='sendEmail();'>
-                <ion-icon name="mail"></ion-icon>
-            </button>
-        </ion-buttons>
-        <ion-buttons right>
             <button ion-button icon-only (click)='save();'>
                 <ion-icon name="sync"></ion-icon>
             </button>
@@ -20,20 +10,56 @@
 </ion-header>
 
 <ion-content>
+    <ion-list>
+        <ion-list-header>
+            Contact
+        </ion-list-header>
+        <ion-item>
+            <ion-label floating>Name</ion-label>
+            <ion-input type="text" [(ngModel)]="name"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label floating>Email
+            </ion-label>
+            <ion-input type="email" [(ngModel)]="email" (press)='sendEmail();'></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label floating>Phone</ion-label>
+            <ion-input type="tel" [(ngModel)]="phone" (press)='usePhone();'></ion-input>
+        </ion-item>
+    </ion-list>
 
-    <ion-item>
-        <ion-label floating>Name</ion-label>
-        <ion-input type="text" [(ngModel)]="name"></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label floating>Email
-        </ion-label>
-        <ion-input type="email" [(ngModel)]="email"></ion-input>      
-    </ion-item>
-    <ion-item>
-        <ion-label floating>Phone</ion-label>
-        <ion-input type="tel"  [(ngModel)]="phone"></ion-input>
-    </ion-item>
+    <ion-list>
+        <ion-list-header>
+            Photo
+        </ion-list-header>
+        <div>
+            <img id="imageControl" width="100%" height="400px" style="display: inline" src="{{startImageUrl}}" />
+        </div>
+    </ion-list>
 
+    <ion-fab right bottom>
+        <button ion-fab color="light">
+            <ion-icon name="md-share"></ion-icon>
+        </button>
+        <ion-fab-list side="left">
+            <button ion-fab (click)='usePhone();'>
+                <ion-icon name="call"></ion-icon>
+            </button>
+            <button ion-fab (click)='sendEmail();'>
+                <ion-icon name="mail"></ion-icon>
+            </button>
+            <button ion-fab (click)='uploadPicture();'>
+                <ion-icon name="image"></ion-icon>
+            </button>
+            <button ion-fab (click)='useCamera();'>
+                <ion-icon name="camera"></ion-icon>
+            </button>
+        </ion-fab-list>
+    </ion-fab>
+
+    <div style="visibility: hidden">
+        <input id="filebtn" type="file">
+    </div>
 
 </ion-content>

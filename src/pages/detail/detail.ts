@@ -18,6 +18,8 @@ export class DetailPage {
   name: string;
   email: string;
   phone: string;
+  startImageUrl: string;
+  imageSrc: any;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -35,6 +37,7 @@ export class DetailPage {
       this.name = contact.name;
       this.email = contact.email;
       this.phone = contact.phone;
+      this.startImageUrl = contact.imageUrl;
     });
 
   }
@@ -54,7 +57,11 @@ export class DetailPage {
       name: this.name,
       email: this.email,
       phone: this.phone,
+      imageUrl: this.startImageUrl
     };
+
+    if (this.imageSrc != null)
+      item.imageUrl = this.imageSrc;
 
     this.contactService.save(item).then(
       contact => {
@@ -62,6 +69,29 @@ export class DetailPage {
         this.navCtrl.pop();
 
       });
+  }
+
+  uploadPicture() {
+    var src = this.imageSrc;
+    var filebtn : any = document.getElementById('filebtn');
+    filebtn.onchange = function(x) {
+      var file = filebtn.files[0];
+      var fileReader = new FileReader();
+      fileReader.onloadend = function (e : any) {
+        var arrayBuffer = e.target.result;
+        
+        var imgCtrl : any = document.getElementById('imageControl');
+        imgCtrl.src = arrayBuffer;
+        
+      };
+      fileReader.readAsDataURL(file);
+      
+    };
+    filebtn.click();
+  }
+
+  useCamera() {
+    alert('camera');
   }
 
   sendEmail() {

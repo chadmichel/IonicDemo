@@ -9,6 +9,9 @@
 
 <ion-content>
   <ion-list>
+      <ion-searchbar
+      [(ngModel)]="filter" (ionInput)="onFilter()">
+    </ion-searchbar>
     <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
       {{item.name}}     
     </button>

@@ -24,14 +24,16 @@ var ContactService = (function () {
                 {
                     id: "1",
                     name: "John Smith",
-                    email: "",
-                    phone: "",
+                    email: "john@example.com",
+                    phone: "555-555-5555",
+                    imageUrl: '/assets/imgs/pic1.png'
                 },
                 {
                     id: "2",
                     name: "Mary Williams",
-                    email: "",
-                    phone: "",
+                    email: "mary@example.com",
+                    phone: "555-555-5555",
+                    imageUrl: '/assets/imgs/pic2.png'
                 },
             ]
         };
@@ -45,7 +47,8 @@ var ContactService = (function () {
             id: item.id,
             name: item.name,
             email: item.email,
-            phone: item.phone
+            phone: item.phone,
+            imageUrl: item.imageUrl,
         });
     };
     ContactService.prototype.save = function (contact) {
@@ -53,6 +56,7 @@ var ContactService = (function () {
         item.name = contact.name;
         item.email = contact.email;
         item.phone = contact.phone;
+        item.imageUrl = contact.imageUrl;
         return this.find(contact.id);
     };
     ContactService = __decorate([
@@ -130,9 +134,11 @@ var ListPage = (function () {
         this.contactService = contactService;
         contactService.getAllContactDetails().then(function (contacts) {
             _this.items = [];
+            _this.allItems = [];
             for (var i = 0; i < contacts.length; i++) {
                 var item = contacts[i];
                 _this.items.push(item);
+                _this.allItems.push(item);
             }
         });
     }
@@ -142,13 +148,22 @@ var ListPage = (function () {
             item: item
         });
     };
+    ListPage.prototype.onFilter = function (e, x) {
+        this.items = [];
+        for (var i = 0; i < this.allItems.length; i++) {
+            var item = this.allItems[i];
+            if (item.name != null && item.name.toLowerCase().includes(this.filter.toLowerCase()))
+                this.items.push(item);
+        }
+    };
     ListPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-list',template:/*ion-inline-start:"/Users/chad/Projects/IonicDemo/src/pages/list/list.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Contacts</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">\n      {{item.name}}     \n    </button>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"/Users/chad/Projects/IonicDemo/src/pages/list/list.html"*/
+            selector: 'page-list',template:/*ion-inline-start:"/Users/chad/Projects/IonicDemo/src/pages/list/list.html"*/'<ion-header>\n  <ion-navbar>\n    <button ion-button menuToggle>\n      <ion-icon name="menu"></ion-icon>\n    </button>\n    <ion-title>Contacts</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n      <ion-searchbar\n      [(ngModel)]="filter" (ionInput)="onFilter()">\n    </ion-searchbar>\n    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">\n      {{item.name}}     \n    </button>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"/Users/chad/Projects/IonicDemo/src/pages/list/list.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */], __WEBPACK_IMPORTED_MODULE_3__services_contactservice__["a" /* ContactService */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__services_contactservice__["a" /* ContactService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__services_contactservice__["a" /* ContactService */]) === "function" && _c || Object])
     ], ListPage);
     return ListPage;
+    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=list.js.map
@@ -198,6 +213,7 @@ var DetailPage = (function () {
             _this.name = contact.name;
             _this.email = contact.email;
             _this.phone = contact.phone;
+            _this.startImageUrl = contact.imageUrl;
         });
     }
     DetailPage.prototype.alertMessage = function (title, detail) {
@@ -215,10 +231,31 @@ var DetailPage = (function () {
             name: this.name,
             email: this.email,
             phone: this.phone,
+            imageUrl: this.startImageUrl
         };
+        if (this.imageSrc != null)
+            item.imageUrl = this.imageSrc;
         this.contactService.save(item).then(function (contact) {
             _this.navCtrl.pop();
         });
+    };
+    DetailPage.prototype.uploadPicture = function () {
+        var src = this.imageSrc;
+        var filebtn = document.getElementById('filebtn');
+        filebtn.onchange = function (x) {
+            var file = filebtn.files[0];
+            var fileReader = new FileReader();
+            fileReader.onloadend = function (e) {
+                var arrayBuffer = e.target.result;
+                var imgCtrl = document.getElementById('imageControl');
+                imgCtrl.src = arrayBuffer;
+            };
+            fileReader.readAsDataURL(file);
+        };
+        filebtn.click();
+    };
+    DetailPage.prototype.useCamera = function () {
+        alert('camera');
     };
     DetailPage.prototype.sendEmail = function () {
         var _this = this;
@@ -271,17 +308,12 @@ var DetailPage = (function () {
     };
     DetailPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-list',template:/*ion-inline-start:"/Users/chad/Projects/IonicDemo/src/pages/detail/detail.html"*/'<ion-header>\n    <ion-navbar color="primary">\n        <ion-title>{{selectedItem.name}}</ion-title>\n        <ion-buttons right>\n            <button ion-button icon-only (click)=\'usePhone();\'>\n                <ion-icon name="call"></ion-icon>\n            </button>\n        </ion-buttons>\n        <ion-buttons right>\n            <button ion-button icon-only (click)=\'sendEmail();\'>\n                <ion-icon name="mail"></ion-icon>\n            </button>\n        </ion-buttons>\n        <ion-buttons right>\n            <button ion-button icon-only (click)=\'save();\'>\n                <ion-icon name="sync"></ion-icon>\n            </button>\n        </ion-buttons>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n\n    <ion-item>\n        <ion-label floating>Name</ion-label>\n        <ion-input type="text" [(ngModel)]="name"></ion-input>\n    </ion-item>\n    <ion-item>\n        <ion-label floating>Email\n        </ion-label>\n        <ion-input type="email" [(ngModel)]="email"></ion-input>      \n    </ion-item>\n    <ion-item>\n        <ion-label floating>Phone</ion-label>\n        <ion-input type="tel"  [(ngModel)]="phone"></ion-input>\n    </ion-item>\n\n\n</ion-content>'/*ion-inline-end:"/Users/chad/Projects/IonicDemo/src/pages/detail/detail.html"*/
+            selector: 'page-list',template:/*ion-inline-start:"/Users/chad/Projects/IonicDemo/src/pages/detail/detail.html"*/'<ion-header>\n    <ion-navbar color="primary">\n        <ion-title>{{selectedItem.name}}</ion-title>\n        <ion-buttons right>\n            <button ion-button icon-only (click)=\'save();\'>\n                <ion-icon name="sync"></ion-icon>\n            </button>\n        </ion-buttons>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list>\n        <ion-list-header>\n            Contact\n        </ion-list-header>\n        <ion-item>\n            <ion-label floating>Name</ion-label>\n            <ion-input type="text" [(ngModel)]="name"></ion-input>\n        </ion-item>\n        <ion-item>\n            <ion-label floating>Email\n            </ion-label>\n            <ion-input type="email" [(ngModel)]="email" (press)=\'sendEmail();\'></ion-input>\n        </ion-item>\n        <ion-item>\n            <ion-label floating>Phone</ion-label>\n            <ion-input type="tel" [(ngModel)]="phone" (press)=\'usePhone();\'></ion-input>\n        </ion-item>\n    </ion-list>\n\n    <ion-list>\n        <ion-list-header>\n            Photo\n        </ion-list-header>\n        <div>\n            <img id="imageControl" width="100%" height="400px" style="display: inline" src="{{startImageUrl}}" />\n        </div>\n    </ion-list>\n\n    <ion-fab right bottom>\n        <button ion-fab color="light">\n            <ion-icon name="md-share"></ion-icon>\n        </button>\n        <ion-fab-list side="left">\n            <button ion-fab (click)=\'usePhone();\'>\n                <ion-icon name="call"></ion-icon>\n            </button>\n            <button ion-fab (click)=\'sendEmail();\'>\n                <ion-icon name="mail"></ion-icon>\n            </button>\n            <button ion-fab (click)=\'uploadPicture();\'>\n                <ion-icon name="image"></ion-icon>\n            </button>\n            <button ion-fab (click)=\'useCamera();\'>\n                <ion-icon name="camera"></ion-icon>\n            </button>\n        </ion-fab-list>\n    </ion-fab>\n\n    <div style="visibility: hidden">\n        <input id="filebtn" type="file">\n    </div>\n\n</ion-content>'/*ion-inline-end:"/Users/chad/Projects/IonicDemo/src/pages/detail/detail.html"*/
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */],
-            __WEBPACK_IMPORTED_MODULE_2__services_contactservice__["a" /* ContactService */],
-            __WEBPACK_IMPORTED_MODULE_3__ionic_native_email_composer__["a" /* EmailComposer */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */],
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */],
-            __WEBPACK_IMPORTED_MODULE_4__ionic_native_call_number__["a" /* CallNumber */]])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__services_contactservice__["a" /* ContactService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_contactservice__["a" /* ContactService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__ionic_native_email_composer__["a" /* EmailComposer */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__ionic_native_email_composer__["a" /* EmailComposer */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_4__ionic_native_call_number__["a" /* CallNumber */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__ionic_native_call_number__["a" /* CallNumber */]) === "function" && _g || Object])
     ], DetailPage);
     return DetailPage;
+    var _a, _b, _c, _d, _e, _f, _g;
 }());
 
 //# sourceMappingURL=detail.js.map

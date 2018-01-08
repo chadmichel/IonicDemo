@@ -10,14 +10,16 @@ export class ContactService {
             {
                 id: "1",
                 name: "John Smith",
-                email: "",
-                phone: "",
+                email: "john@example.com",
+                phone: "555-555-5555",
+                imageUrl: '/assets/imgs/pic1.png'
             },
             {
                 id: "2",
                 name: "Mary Williams",
-                email: "",
-                phone: "",
+                email: "mary@example.com",
+                phone: "555-555-5555", 
+                imageUrl: '/assets/imgs/pic2.png'
             },
         ]
     };
@@ -35,7 +37,8 @@ export class ContactService {
             id: item.id,
             name: item.name,
             email: item.email,
-            phone: item.phone
+            phone: item.phone,
+            imageUrl: item.imageUrl,
         });
     }
 
@@ -44,6 +47,7 @@ export class ContactService {
         item.name = contact.name;
         item.email = contact.email;
         item.phone = contact.phone;
+        item.imageUrl = contact.imageUrl;
         return this.find(contact.id);
     }
 }
