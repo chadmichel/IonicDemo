@@ -20,6 +20,7 @@ export class DetailPage {
   phone: string;
   startImageUrl: string;
   imageSrc: any;
+  hasPhoto: boolean;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -32,14 +33,27 @@ export class DetailPage {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
 
-    this.contactService.find(this.selectedItem.id).then(contact => {
-      this.id = contact.id;
-      this.name = contact.name;
-      this.email = contact.email;
-      this.phone = contact.phone;
-      this.startImageUrl = contact.imageUrl;
-    });
+    this.hasPhoto = false;
 
+    if (this.selectedItem.id != null && this.selectedItem.id.length > 0 && this.selectedItem.id != "0") {
+      this.contactService.find(this.selectedItem.id).then(contact => {
+        this.id = contact.id;
+        this.name = contact.name;
+        this.email = contact.email;
+        this.phone = contact.phone;
+        this.startImageUrl = contact.imageUrl;
+
+        if (this.startImageUrl != null && this.startImageUrl.length > 0)
+          this.hasPhoto = true;
+      });
+    }
+    else {
+      this.id = this.selectedItem.id;
+      this.name = this.selectedItem.name;
+      this.email = this.selectedItem.email;
+      this.phone = this.selectedItem.phone;
+      this.startImageUrl = this.selectedItem.imageUrl;
+    }
   }
 
   alertMessage(title, detail) {

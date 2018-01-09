@@ -21,15 +21,15 @@
         <ion-item>
             <ion-label floating>Email
             </ion-label>
-            <ion-input type="email" [(ngModel)]="email" (press)='sendEmail();'></ion-input>
+            <ion-input type="email" [(ngModel)]="email"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label floating>Phone</ion-label>
-            <ion-input type="tel" [(ngModel)]="phone" (press)='usePhone();'></ion-input>
+            <ion-input type="tel" [(ngModel)]="phone"></ion-input>
         </ion-item>
     </ion-list>
 
-    <ion-list>
+    <ion-list *ngIf="hasPhoto">
         <ion-list-header>
             Photo
         </ion-list-header>

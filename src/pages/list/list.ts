@@ -46,4 +46,18 @@ export class ListPage {
         this.items.push(item); 
     }
   }
+
+  addContact() {
+    var item: ContactDetail = {
+        id: "0",
+        name: "",
+        email: "",
+        phone: "",
+        imageUrl: ''
+    };
+
+    this.navCtrl.push(DetailPage, {
+      item: item
+    })
+  }
 }

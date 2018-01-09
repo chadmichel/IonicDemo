@@ -6,6 +6,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { DetailPage } from '../pages/detail/detail';
+import { LoginPage } from '../pages/login/login';
 
 import { ContactService } from '../services/contactservice';
 
@@ -20,7 +21,8 @@ import { CallNumber } from '@ionic-native/call-number';
     MyApp,
     HomePage,
     ListPage,
-    DetailPage
+    DetailPage,
+    LoginPage,
   ],
   imports: [
     BrowserModule,
@@ -31,7 +33,8 @@ import { CallNumber } from '@ionic-native/call-number';
     MyApp,
     HomePage,
     ListPage,
-    DetailPage
+    DetailPage,
+    LoginPage
   ],
   providers: [
     StatusBar,
