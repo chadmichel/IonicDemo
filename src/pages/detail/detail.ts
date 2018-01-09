@@ -6,6 +6,7 @@ import { EmailComposer } from '@ionic-native/email-composer';
 import { AlertController } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 import { CallNumber } from '@ionic-native/call-number';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 @Component({
   selector: 'page-list',
@@ -28,7 +29,8 @@ export class DetailPage {
     public emailComposer: EmailComposer,
     public alertController: AlertController,
     public platform: Platform,
-    public callNumber: CallNumber) {
+    public callNumber: CallNumber,
+    public camera: Camera) {
 
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
@@ -105,7 +107,22 @@ export class DetailPage {
   }
 
   useCamera() {
-    alert('camera');
+    
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    
+    this.camera.getPicture(options).then((imageData) => {
+     // imageData is either a base64 encoded string or a file URI
+     // If it's base64:
+     let base64Image = 'data:image/jpeg;base64,' + imageData;
+    }, (err) => {
+      alert(err);
+    });
+
   }
 
   sendEmail() {

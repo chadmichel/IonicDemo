@@ -15,6 +15,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { EmailComposer } from '@ionic-native/email-composer';
 import { CallNumber } from '@ionic-native/call-number';
+import { Camera } from '@ionic-native/camera';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { CallNumber } from '@ionic-native/call-number';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ContactService,
     EmailComposer,
-    CallNumber
+    CallNumber,
+    Camera
   ]
 })
 export class AppModule {}

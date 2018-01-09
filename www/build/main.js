@@ -191,6 +191,7 @@ webpackEmptyAsyncContext.id = 153;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_contactservice__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_email_composer__ = __webpack_require__(197);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_call_number__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera__ = __webpack_require__(199);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -207,8 +208,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var DetailPage = (function () {
-    function DetailPage(navCtrl, navParams, contactService, emailComposer, alertController, platform, callNumber) {
+    function DetailPage(navCtrl, navParams, contactService, emailComposer, alertController, platform, callNumber, camera) {
         var _this = this;
         this.navCtrl = navCtrl;
         this.navParams = navParams;
@@ -217,6 +219,7 @@ var DetailPage = (function () {
         this.alertController = alertController;
         this.platform = platform;
         this.callNumber = callNumber;
+        this.camera = camera;
         // If we navigated to this page, we will have an item available as a nav param
         this.selectedItem = navParams.get('item');
         this.hasPhoto = false;
@@ -278,7 +281,19 @@ var DetailPage = (function () {
         filebtn.click();
     };
     DetailPage.prototype.useCamera = function () {
-        alert('camera');
+        var options = {
+            quality: 100,
+            destinationType: this.camera.DestinationType.DATA_URL,
+            encodingType: this.camera.EncodingType.JPEG,
+            mediaType: this.camera.MediaType.PICTURE
+        };
+        this.camera.getPicture(options).then(function (imageData) {
+            // imageData is either a base64 encoded string or a file URI
+            // If it's base64:
+            var base64Image = 'data:image/jpeg;base64,' + imageData;
+        }, function (err) {
+            alert(err);
+        });
     };
     DetailPage.prototype.sendEmail = function () {
         var _this = this;
@@ -331,7 +346,7 @@ var DetailPage = (function () {
     };
     DetailPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-list',template:/*ion-inline-start:"/Users/chad/Projects/IonicDemo/src/pages/detail/detail.html"*/'<ion-header>\n    <ion-navbar color="primary">\n        <ion-title>{{selectedItem.name}}</ion-title>\n        <ion-buttons right>\n            <button ion-button icon-only (click)=\'save();\'>\n                <ion-icon name="sync"></ion-icon>\n            </button>\n        </ion-buttons>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list>\n        <ion-list-header>\n            Contact\n        </ion-list-header>\n        <ion-item>\n            <ion-label floating>Name</ion-label>\n            <ion-input type="text" [(ngModel)]="name"></ion-input>\n        </ion-item>\n        <ion-item>\n            <ion-label floating>Email\n            </ion-label>\n            <ion-input type="email" [(ngModel)]="email"></ion-input>\n        </ion-item>\n        <ion-item>\n            <ion-label floating>Phone</ion-label>\n            <ion-input type="tel" [(ngModel)]="phone"></ion-input>\n        </ion-item>\n    </ion-list>\n\n    <ion-list *ngIf="hasPhoto">\n        <ion-list-header>\n            Photo\n        </ion-list-header>\n        <div>\n            <img id="imageControl" width="100%" height="400px" style="display: inline" src="{{startImageUrl}}" />\n        </div>\n    </ion-list>\n\n    <ion-fab right bottom>\n        <button ion-fab color="light">\n            <ion-icon name="md-share"></ion-icon>\n        </button>\n        <ion-fab-list side="left">\n            <button ion-fab (click)=\'usePhone();\'>\n                <ion-icon name="call"></ion-icon>\n            </button>\n            <button ion-fab (click)=\'sendEmail();\'>\n                <ion-icon name="mail"></ion-icon>\n            </button>\n            <button ion-fab (click)=\'uploadPicture();\'>\n                <ion-icon name="image"></ion-icon>\n            </button>\n            <button ion-fab (click)=\'useCamera();\'>\n                <ion-icon name="camera"></ion-icon>\n            </button>\n        </ion-fab-list>\n    </ion-fab>\n\n    <div style="visibility: hidden">\n        <input id="filebtn" type="file">\n    </div>\n\n</ion-content>'/*ion-inline-end:"/Users/chad/Projects/IonicDemo/src/pages/detail/detail.html"*/
+            selector: 'page-list',template:/*ion-inline-start:"/Users/chad/Projects/IonicDemo/src/pages/detail/detail.html"*/'<ion-header>\n    <ion-navbar color="primary">\n        <ion-title>{{selectedItem.name}}</ion-title>\n        <ion-buttons right>\n            <button ion-button icon-only (click)=\'save();\'>\n                <ion-icon name="sync"></ion-icon>\n            </button>\n        </ion-buttons>\n    </ion-navbar>\n</ion-header>\n\n<ion-content>\n    <ion-list>\n        <ion-list-header>\n            Contact\n        </ion-list-header>\n        <ion-item>\n            <ion-label fixed>Name</ion-label>\n            <ion-input type="text" [(ngModel)]="name"></ion-input>\n        </ion-item>\n        <ion-item>\n            <ion-label fixed>Email\n            </ion-label>\n            <ion-input type="email" [(ngModel)]="email"></ion-input>\n        </ion-item>\n        <ion-item>\n            <ion-label fixed>Phone</ion-label>\n            <ion-input type="tel" [(ngModel)]="phone"></ion-input>\n        </ion-item>\n    </ion-list>\n\n    <ion-list *ngIf="hasPhoto">\n        <ion-list-header>\n            Photo\n        </ion-list-header>\n        <div>\n            <img id="imageControl" width="100%" height="400px" style="display: inline" src="{{startImageUrl}}" />\n        </div>\n    </ion-list>\n\n    <ion-fab right bottom>\n        <button ion-fab color="light">\n            <ion-icon name="md-share"></ion-icon>\n        </button>\n        <ion-fab-list side="left">\n            <button ion-fab (click)=\'usePhone();\'>\n                <ion-icon name="call"></ion-icon>\n            </button>\n            <button ion-fab (click)=\'sendEmail();\'>\n                <ion-icon name="mail"></ion-icon>\n            </button>\n            <button ion-fab (click)=\'uploadPicture();\'>\n                <ion-icon name="image"></ion-icon>\n            </button>\n            <button ion-fab (click)=\'useCamera();\'>\n                <ion-icon name="camera"></ion-icon>\n            </button>\n        </ion-fab-list>\n    </ion-fab>\n\n    <div style="visibility: hidden">\n        <input id="filebtn" type="file">\n    </div>\n\n</ion-content>'/*ion-inline-end:"/Users/chad/Projects/IonicDemo/src/pages/detail/detail.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */],
@@ -339,7 +354,8 @@ var DetailPage = (function () {
             __WEBPACK_IMPORTED_MODULE_3__ionic_native_email_composer__["a" /* EmailComposer */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */],
-            __WEBPACK_IMPORTED_MODULE_4__ionic_native_call_number__["a" /* CallNumber */]])
+            __WEBPACK_IMPORTED_MODULE_4__ionic_native_call_number__["a" /* CallNumber */],
+            __WEBPACK_IMPORTED_MODULE_5__ionic_native_camera__["a" /* Camera */]])
     ], DetailPage);
     return DetailPage;
 }());
@@ -348,7 +364,7 @@ var DetailPage = (function () {
 
 /***/ }),
 
-/***/ 199:
+/***/ 200:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -387,7 +403,7 @@ var LoginPage = (function () {
     };
     LoginPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-login',template:/*ion-inline-start:"/Users/chad/Projects/IonicDemo/src/pages/login/login.html"*/'<ion-header>\n\n  <ion-navbar>\n    <ion-title>soma</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <ion-list>\n    <ion-list-header>\n      Login\n    </ion-list-header>\n    <ion-item>\n      <ion-label floating>Email</ion-label>\n      <ion-input type="email" [(ngModel)]="email"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label floating>Password\n      </ion-label>\n      <ion-input type="password" [(ngModel)]="password"></ion-input>\n    </ion-item>\n  </ion-list>\n  <button ion-button full (click)="login()">Login</button>\n\n</ion-content>'/*ion-inline-end:"/Users/chad/Projects/IonicDemo/src/pages/login/login.html"*/,
+            selector: 'page-login',template:/*ion-inline-start:"/Users/chad/Projects/IonicDemo/src/pages/login/login.html"*/'<ion-header>\n\n  <ion-navbar>\n    <ion-title>soma</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <ion-list>\n    <ion-list-header>\n      Login\n    </ion-list-header>\n    <ion-item>\n      <ion-label fixed>Email</ion-label>\n      <ion-input type="email" [(ngModel)]="email"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label fixed>Password\n      </ion-label>\n      <ion-input type="password" [(ngModel)]="password"></ion-input>\n    </ion-item>\n  </ion-list>\n  <button ion-button full (click)="login()">Login</button>\n\n</ion-content>'/*ion-inline-end:"/Users/chad/Projects/IonicDemo/src/pages/login/login.html"*/,
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */]])
     ], LoginPage);
@@ -398,13 +414,13 @@ var LoginPage = (function () {
 
 /***/ }),
 
-/***/ 200:
+/***/ 201:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(201);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(225);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -412,7 +428,7 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 224:
+/***/ 225:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -420,22 +436,24 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(267);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(276);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(268);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_home_home__ = __webpack_require__(277);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_list_list__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_detail_detail__ = __webpack_require__(196);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_login_login__ = __webpack_require__(199);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_login_login__ = __webpack_require__(200);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__services_contactservice__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ionic_native_status_bar__ = __webpack_require__(193);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_native_splash_screen__ = __webpack_require__(195);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_email_composer__ = __webpack_require__(197);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__ionic_native_call_number__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__ionic_native_camera__ = __webpack_require__(199);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -481,7 +499,8 @@ var AppModule = (function () {
                 { provide: __WEBPACK_IMPORTED_MODULE_1__angular_core__["u" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["c" /* IonicErrorHandler */] },
                 __WEBPACK_IMPORTED_MODULE_8__services_contactservice__["a" /* ContactService */],
                 __WEBPACK_IMPORTED_MODULE_11__ionic_native_email_composer__["a" /* EmailComposer */],
-                __WEBPACK_IMPORTED_MODULE_12__ionic_native_call_number__["a" /* CallNumber */]
+                __WEBPACK_IMPORTED_MODULE_12__ionic_native_call_number__["a" /* CallNumber */],
+                __WEBPACK_IMPORTED_MODULE_13__ionic_native_camera__["a" /* Camera */]
             ]
         })
     ], AppModule);
@@ -492,7 +511,7 @@ var AppModule = (function () {
 
 /***/ }),
 
-/***/ 267:
+/***/ 268:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -502,7 +521,7 @@ var AppModule = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(193);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(195);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_list_list__ = __webpack_require__(100);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_login_login__ = __webpack_require__(199);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_login_login__ = __webpack_require__(200);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -560,7 +579,7 @@ var MyApp = (function () {
 
 /***/ }),
 
-/***/ 276:
+/***/ 277:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -595,5 +614,5 @@ var HomePage = (function () {
 
 /***/ })
 
-},[200]);
+},[201]);
 //# sourceMappingURL=main.js.map
